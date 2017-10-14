@@ -1,0 +1,13 @@
+{
+    "_comment": "SoSOFS example config",
+    "common": {
+        "_comment": "Configuration items shared between modules",
+        "dataRoot": "./data",
+        "logTarget": "console"
+    },
+    "server": {
+        "_comment": "SoSOFS config",
+        "port": 9000,
+        "verbosity": "trace"
+    }
+}
