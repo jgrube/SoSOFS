@@ -2,9 +2,6 @@
   "name": "sosofs",
   "version": "0.1.0",
   "description": "SoSOFS",
-  "scripts": {
-    "test": "test"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jgrube/SoSOFS.git"
@@ -19,10 +16,7 @@
     "node": ">=6.9.1"
   },
   "devDependencies": {
-    "@types/body-parser": "^1.16.5",
     "@types/chai": "^4.0.4",
-    "@types/express": "^4.0.37",
-    "@types/express-serve-static-core": "^4.0.53",
     "@types/fs-extra": "^4.0.2",
     "@types/mocha": "^2.2.43",
     "@types/node": "^6.0.46",
@@ -33,9 +27,11 @@
     "typescript": "^2.5.3"
   },
   "dependencies": {
-    "body-parser": "^1.18.2",
     "bristol": "^0.3.3",
-    "express": "^4.16.2",
     "fs-extra": "^4.0.2"
+  },
+  "scripts": {
+    "client": "node ./client",
+    "server": "node ./server"
   }
 }
