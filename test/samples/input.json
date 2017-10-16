@@ -1,0 +1,23 @@
+{
+  "Object A": {
+      "Prop A": "A-A",
+      "Prop B": "A-B",
+      "Prop C": 3,
+      "Prop D": true,
+      "Prop E": [4, 3, 2, 1],
+      "Prop F": {
+          "Sub-Prop A": "A-F-A",
+          "Sub-Prop B": "A-F-B"
+      }
+  },
+  "Object B": {
+      "Prop A": 1,
+      "Prop B": false,
+      "Prop C": "B-C",
+      "Prop D": {
+          "Sub-Prop A": 1,
+          "Sub-Prop B": "A-F-B"
+      },
+      "Prop E": ["C", "B", "A"]
+  }
+}
