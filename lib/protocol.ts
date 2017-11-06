@@ -17,6 +17,13 @@ export const enum MAX {
     PACKET_SIZE = (10 * 1024 * 1024) // 10 MB
 }
 
+export interface HEADER {
+    version?: number;
+    msgType: MESSAGE;
+    pathLength: number;
+    fileSize?: number;
+}
+
 // Header looks like:
 // (UINT8)  Protocol version
 // (UINT8)  Message type
@@ -34,19 +41,36 @@ export const enum MAX {
 // File data:    0x68 0x65 0x6C 0x6C 0x6F
 
 
-export function buildHeader(msgType: MESSAGE, pathLength: number, fileSize?: number) {
+export function buildHeader(headerInfo: HEADER): Buffer {
     let header: Buffer = Buffer.alloc(4);
     header.writeUInt8(VERSION, 0);
-    header.writeUInt8(msgType, 1);
-    header.writeUInt16BE(pathLength, 2);
+    header.writeUInt8(headerInfo.msgType, 1);
+    header.writeUInt16BE(headerInfo.pathLength, 2);
 
-    if (msgType !== MESSAGE.READ_REQ && fileSize !== undefined) {
-        let msgSize: Buffer = Buffer.alloc(3);
-        msgSize.writeUInt8(((fileSize & 0xFF0000) >> 16), 0);
-        msgSize.writeUInt16BE((fileSize & 0x00FFFF), 1);
+    if (headerInfo.msgType !== MESSAGE.READ_REQ && headerInfo.fileSize !== undefined) {
+        let fileSize: Buffer = Buffer.alloc(3);
+        fileSize.writeUInt8(((headerInfo.fileSize & 0xFF0000) >> 16), 0);
+        fileSize.writeUInt16BE((headerInfo.fileSize & 0x00FFFF), 1);
 
-        header = Buffer.concat([header, msgSize]);
+        header = Buffer.concat([header, fileSize]);
     }
 
     return header;
+}
+
+export function parseHeader(header: Buffer): HEADER {
+    let headerInfo: HEADER = {version: null, msgType: null, pathLength: 0, fileSize: 0};
+    headerInfo.version = header.readUInt8(0);
+    headerInfo.msgType = header.readInt8(1);
+    headerInfo.pathLength = header.readUInt16BE(2);
+
+    if (headerInfo.msgType !== MESSAGE.READ_REQ) {
+        let fileSize: number = 0;
+        fileSize += (header.readUInt8(4) << 16);
+        fileSize += header.readUInt16BE(5);
+
+        headerInfo.fileSize = fileSize;
+    }
+
+    return headerInfo;
 }
