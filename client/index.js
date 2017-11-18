@@ -1,6 +1,7 @@
 // Copyright (c) 2017 John Grube johnegrube@gmail.com
 // Description: Client startup file
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const client = require("./client");
 let logger = require("bristol");
 const config = require("../config.json");

@@ -1,6 +1,7 @@
 // Copyright (c) 2017 John Grube johnegrube@gmail.com
 // Description: SoSOFS server
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const net = require("net");
 let logger = require("bristol");
 const config = require("../config.json");

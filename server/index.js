@@ -1,6 +1,7 @@
 // Copyright (c) 2017 John Grube johnegrube@gmail.com
 // Description: Server startup file
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const path = require("path");
 const server = require("./server");
 let logger = require("bristol");
