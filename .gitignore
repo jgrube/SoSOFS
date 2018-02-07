@@ -28,8 +28,8 @@ config.json.*
 npm-debug.log
 
 # Test artifacts
-report.xml/
 coverage/
+data/test
 
 # IDE files
 .idea/
