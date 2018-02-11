@@ -21,7 +21,7 @@ function connectionHandler(connection) {
     })
         .on("close", (error) => {
         logger.trace(`Client (${connection.remoteAddress}:${connection.remotePort}) connection closed`);
-        setImmediate(parseRxData, incomingData);
+        setTimeout(parseRxData, 0, incomingData);
     })
         .on("error", (error) => {
         logger.warn(`Client (${connection.remoteAddress}:${connection.remotePort}) error: ${error}`);

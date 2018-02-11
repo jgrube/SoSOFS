@@ -27,7 +27,7 @@ function connectionHandler(connection: net.Socket): void {
     })
     .on("close", (error: boolean) => {
         logger.trace(`Client (${connection.remoteAddress}:${connection.remotePort}) connection closed`);
-        setImmediate(parseRxData, incomingData);
+        setTimeout(parseRxData, 0, incomingData);
     })
     .on("error", (error: NodeJS.ErrnoException) => {
         logger.warn(`Client (${connection.remoteAddress}:${connection.remotePort}) error: ${error}`);
