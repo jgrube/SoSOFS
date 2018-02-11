@@ -4,6 +4,10 @@
 
 export const VERSION: number = 1;
 
+// Read Request - Client sends read request to server
+// Read Response - Server response to client's read request
+// Write - Client sends file to server to write to disk
+// Sync - Servers synchronize file system amongst each other
 export const enum MESSAGE {
     READ_REQ = 0x01, // Read request
     READ_RES = 0x02, // Read response
@@ -17,6 +21,12 @@ export const enum MAX {
     PACKET_SIZE = (10 * 1024 * 1024) // 10 MB
 }
 
+/** 
+ * @param {number} version? - (1 byte) Only gets populated when parsing header. buildHeader() will populate this
+ * @param {MESSAGE} msgType - See {MESSAGE} enum for possible values
+ * @param {number} pathLength - (2 bytes) Length of filename/path string
+ * @param {number} fileSize? - (3 bytes) Total size of file
+*/
 export interface HEADER {
     version?: number;
     msgType: MESSAGE;
@@ -73,4 +83,18 @@ export function parseHeader(header: Buffer): HEADER {
     }
 
     return headerInfo;
+}
+
+export function getRawHeaderFromPacket(data: Buffer): Buffer {
+    if (data.length < 8) {
+        return null;
+    }
+
+    let padIndex: number =  data.slice(5, data.length).indexOf(0x00);
+
+    if (padIndex === -1) {
+        return null;
+    }
+
+    return data.slice(0, (padIndex + 4));
 }
