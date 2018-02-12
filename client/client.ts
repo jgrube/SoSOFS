@@ -1,5 +1,10 @@
-// Copyright (c) 2017 John Grube johnegrube@gmail.com
-// Description: SoSOFS server
+/**
+ * SoSOFS client module
+ * @module client
+ * @author John Grube <johnegrube@gmail.com>
+ * @see https://github.com/jgrube/SoSOFS#readme
+ */
+
 "use strict";
 
 import net = require("net");

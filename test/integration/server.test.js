@@ -1,5 +1,9 @@
-// Copyright (c) 2017 John Grube johnegrube@gmail.com
-// Description: Support file for Mocha tests
+/**
+ * SoSOFS Mocha tests
+ * @module server.test
+ * @author John Grube <johnegrube@gmail.com>
+ * @see https://github.com/jgrube/SoSOFS#readme
+ */
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 describe("int:Server", function () {

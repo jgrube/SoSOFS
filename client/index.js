@@ -1,5 +1,9 @@
-// Copyright (c) 2017 John Grube johnegrube@gmail.com
-// Description: Client startup file
+/**
+ * SoSOFS client startup file
+ * @module client/index
+ * @author John Grube <johnegrube@gmail.com>
+ * @see https://github.com/jgrube/SoSOFS#readme
+ */
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const client = require("./client");

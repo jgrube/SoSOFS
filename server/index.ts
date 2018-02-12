@@ -1,5 +1,10 @@
-// Copyright (c) 2017 John Grube johnegrube@gmail.com
-// Description: Server startup file
+/**
+ * SoSOFS server startup file
+ * @module server/index
+ * @author John Grube <johnegrube@gmail.com>
+ * @see https://github.com/jgrube/SoSOFS#readme
+ */
+
 "use strict";
 
 import path = require("path");

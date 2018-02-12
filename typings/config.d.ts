@@ -1,5 +1,9 @@
-// Copyright (c) 2017 John Grube johnegrube@gmail.com
-// Description: TS definition for config.json
+/**
+ * TS definition for config.json
+ * @module config.d.ts
+ * @author John Grube <johnegrube@gmail.com>
+ * @see https://github.com/jgrube/SoSOFS#readme
+ */
 
 interface Config {
     _comment: string;

@@ -1,5 +1,10 @@
-// Copyright (c) 2017 John Grube johnegrube@gmail.com
-// Description: SoSOFS protocol description and helper functions
+/**
+ * SoSOFS protocol description and helper functions
+ * @module protocol
+ * @author John Grube <johnegrube@gmail.com>
+ * @see https://github.com/jgrube/SoSOFS#readme
+ */
+
 "use strict";
 
 export const VERSION: number = 1;
