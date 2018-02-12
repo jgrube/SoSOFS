@@ -24,13 +24,13 @@ export const enum MAX {
 /** 
  * @param {number} version? - (1 byte) Only gets populated when parsing header. buildHeader() will populate this
  * @param {MESSAGE} msgType - See {MESSAGE} enum for possible values
- * @param {number} pathLength - (2 bytes) Length of filename/path string
+ * @param {string} path - (4351 characters max) Path to file
  * @param {number} fileSize? - (3 bytes) Total size of file
 */
 export interface HEADER {
     version?: number;
     msgType: MESSAGE;
-    pathLength: number;
+    path: string;
     fileSize?: number;
 }
 
@@ -55,24 +55,29 @@ export function buildHeader(headerInfo: HEADER): Buffer {
     let header: Buffer = Buffer.alloc(4);
     header.writeUInt8(VERSION, 0);
     header.writeUInt8(headerInfo.msgType, 1);
-    header.writeUInt16BE(headerInfo.pathLength, 2);
+    header.writeUInt16BE(headerInfo.path.length, 2);
 
-    if (headerInfo.msgType !== MESSAGE.READ_REQ && headerInfo.fileSize !== undefined) {
-        let fileSize: Buffer = Buffer.alloc(3);
-        fileSize.writeUInt8(((headerInfo.fileSize & 0xFF0000) >> 16), 0);
-        fileSize.writeUInt16BE((headerInfo.fileSize & 0x00FFFF), 1);
+    // Size will be 0 for READ_REQ
+    let fileSize: Buffer = Buffer.alloc(3, 0x00);
+    fileSize.writeUInt8(((headerInfo.fileSize & 0xFF0000) >> 16), 0);
+    fileSize.writeUInt16BE((headerInfo.fileSize & 0x00FFFF), 1);
+    header = Buffer.concat([header, fileSize]);
 
-        header = Buffer.concat([header, fileSize]);
-    }
+    header = Buffer.concat([header, Buffer.from(headerInfo.path, "ascii")]);
+
+    // null padding byte
+    header = Buffer.concat([header, Buffer.from([0x00])]);
 
     return header;
 }
 
 export function parseHeader(header: Buffer): HEADER {
-    let headerInfo: HEADER = {version: null, msgType: null, pathLength: 0, fileSize: 0};
+    let headerInfo: HEADER = {version: null, msgType: null, path: null, fileSize: 0};
     headerInfo.version = header.readUInt8(0);
     headerInfo.msgType = header.readInt8(1);
-    headerInfo.pathLength = header.readUInt16BE(2);
+
+    let pathLength: number = header.readUInt16BE(2);
+    headerInfo.path = header.slice(7, (pathLength + 7)).toString();
 
     if (headerInfo.msgType !== MESSAGE.READ_REQ) {
         let fileSize: number = 0;
@@ -90,11 +95,12 @@ export function getRawHeaderFromPacket(data: Buffer): Buffer {
         return null;
     }
 
-    let padIndex: number =  data.slice(5, data.length).indexOf(0x00);
+    // Don't put null in your filename, dingus
+    let padIndex: number =  data.slice(8, data.length).indexOf(0x00);
 
     if (padIndex === -1) {
         return null;
     }
 
-    return data.slice(0, (padIndex + 4));
+    return data.slice(0, (padIndex + 8)); // 8 since the slice() above stared at index 8
 }
