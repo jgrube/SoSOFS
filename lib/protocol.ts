@@ -32,11 +32,16 @@ export const enum MAX {
  * @param {string} path - (4351 characters max) Path to file
  * @param {number} fileSize? - (3 bytes) Total size of file
 */
-export interface HEADER {
+export interface Header {
     version?: number;
     msgType: MESSAGE;
     path: string;
     fileSize?: number;
+}
+
+export interface RawMessage {
+    header: Buffer;
+    body: Buffer;
 }
 
 // Header looks like:
@@ -56,7 +61,7 @@ export interface HEADER {
 // File data:    0x68 0x65 0x6C 0x6C 0x6F
 
 
-export function buildHeader(headerInfo: HEADER): Buffer {
+export function buildHeader(headerInfo: Header): Buffer {
     let header: Buffer = Buffer.alloc(4);
     header.writeUInt8(VERSION, 0);
     header.writeUInt8(headerInfo.msgType, 1);
@@ -76,8 +81,8 @@ export function buildHeader(headerInfo: HEADER): Buffer {
     return header;
 }
 
-export function parseHeader(header: Buffer): HEADER {
-    let headerInfo: HEADER = {version: null, msgType: null, path: null, fileSize: 0};
+export function parseHeader(header: Buffer): Header {
+    let headerInfo: Header = {version: null, msgType: null, path: null, fileSize: 0};
     headerInfo.version = header.readUInt8(0);
     headerInfo.msgType = header.readInt8(1);
 
@@ -95,7 +100,7 @@ export function parseHeader(header: Buffer): HEADER {
     return headerInfo;
 }
 
-export function getRawHeaderFromPacket(data: Buffer): Buffer {
+export function getRawMessageFromPacket(data: Buffer): RawMessage {
     if (data.length < 8) {
         return null;
     }
@@ -107,5 +112,10 @@ export function getRawHeaderFromPacket(data: Buffer): Buffer {
         return null;
     }
 
-    return data.slice(0, (padIndex + 8)); // 8 since the slice() above stared at index 8
+    let message: RawMessage = {
+        header: data.slice(0, (padIndex + 8)), // 8 since the slice() above stared at index 8
+        body: data.slice((padIndex + 9), data.length) // Skip over the null padding byte
+    }
+
+    return message;
 }
